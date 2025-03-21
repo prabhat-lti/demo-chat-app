@@ -67,6 +67,7 @@ const CustomTooltip = ({ active, payload }) => {
 };
 
 const CpfChart = () => {
+  // promo_week: true -- this is for bold of the x-axis date
   const cpfData = [
     { eventWeeks: "01/02/2024", forecasted_shipments: 4000, year: 2024 },
     { eventWeeks: "02/02/2024", forecasted_shipments: 3000, year: 2024 },
@@ -82,6 +83,10 @@ const CpfChart = () => {
     { eventWeeks: "05/02/2025", forecasted_shipments: 2100, year: 2025 },
     { eventWeeks: "06/02/2025", forecasted_shipments: 2600, year: 2025 },
     { eventWeeks: "07/02/2025", forecasted_shipments: 2600, year: 2025 },
+    { eventWeeks: "08/02/2025", forecasted_shipments: 2600, year: 2025 },
+    { eventWeeks: "09/02/2025", forecasted_shipments: 2600, year: 2025 },
+    { eventWeeks: "10/02/2025", forecasted_shipments: 2600, year: 2025 },
+    // { eventWeeks: "11/02/2025", forecasted_shipments: 2600, previous_forcast: true, promo_week: true },
   ];
 
   const currentYear = new Date().getFullYear();
@@ -125,10 +130,11 @@ const CpfChart = () => {
         <div
           style={{
             width: "2px",
-            backgroundColor: "blue",
+            backgroundColor: "#a6fff9",
             height: `calc(100% - ${xAxisHeight}px)`, // Adjust height based on X-axis area
           }}
         />
+        
         <ResponsiveContainer width="20%" height="100%">
           <BarChart
             data={barChartData}
