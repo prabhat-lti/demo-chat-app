@@ -27,9 +27,23 @@ const CustomizedAxisTick = ({ x, y, stroke, payload }) => (
   </g>
 );
 
+const formatYAxisTick = (value) => {
+  if (value >= 100000) {
+    return `${(value / 100000).toFixed(1)}L`;
+  }
+  return value;
+};
+
+const formatDataPointLabel = (value) => {
+  if (value >= 100000) {
+    return `${(value / 100000).toFixed(1)}L`;
+  }
+  return value;
+};
+
 const CustomizedLabel = ({ x, y, stroke, value }) => (
   <text x={x} y={y} dy={-4} fill={stroke} fontSize={10} textAnchor="middle">
-    {value}
+    {formatDataPointLabel(value)} {/* Apply the formatting function */}
   </text>
 );
 
@@ -60,7 +74,7 @@ const CpfChart = () => {
     { eventWeeks: "04/02/2024", forecasted_shipments: 2780, year: 2024 },
     { eventWeeks: "05/02/2024", forecasted_shipments: 1890, year: 2024 },
     { eventWeeks: "06/02/2024", forecasted_shipments: 2390, year: 2024 },
-    { eventWeeks: "07/02/2024", forecasted_shipments: 300000000, year: 2024 },
+    { eventWeeks: "07/02/2024", forecasted_shipments: 3000, year: 2024 },
     { eventWeeks: "01/02/2025", forecasted_shipments: 4200, year: 2025 },
     { eventWeeks: "02/02/2025", forecasted_shipments: 3300, year: 2025 },
     { eventWeeks: "03/02/2025", forecasted_shipments: 2300, year: 2025 },
@@ -74,6 +88,7 @@ const CpfChart = () => {
 
   const lineChartData = cpfData.filter((item) => item.year < currentYear);
   const barChartData = cpfData.filter((item) => item.year === currentYear);
+  const xAxisHeight = 138;
 
   return (
     <div style={{ height: "400px" }}>
@@ -85,41 +100,54 @@ const CpfChart = () => {
             data={lineChartData}
             margin={{
               top: 20,
-              right: 20,
+              right: 10,
               left: 40,
               bottom: 80,
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="eventWeeks" height={60} tick={<CustomizedAxisTick />} />
-            <YAxis />
+            <XAxis
+              dataKey="eventWeeks"
+              height={60}
+              tick={<CustomizedAxisTick />}
+            />
+            <YAxis tickFormatter={formatYAxisTick} />
             <Tooltip content={<CustomTooltip />} />
             <Line
               type="monotone"
               dataKey="forecasted_shipments"
               stroke="#8884d8"
-              label={<CustomizedLabel />}
+              // label={<CustomizedLabel />}
             />
           </LineChart>
         </ResponsiveContainer>
-
+        {/* Vertical Blue Line */}
+        <div
+          style={{
+            width: "2px",
+            backgroundColor: "blue",
+            height: `calc(100% - ${xAxisHeight}px)`, // Adjust height based on X-axis area
+          }}
+        />
         <ResponsiveContainer width="20%" height="100%">
           <BarChart
             data={barChartData}
             margin={{
               top: 20,
               right: 30,
-              // left: 20,
               bottom: 80,
+              left: 10,
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="eventWeeks" height={60} tick={<CustomizedAxisTick />} />
-            <Tooltip content={<CustomTooltip />} />
-            <Bar
-              dataKey="forecasted_shipments"
-              fill="#82ca9d"
+            <XAxis
+              dataKey="eventWeeks"
+              height={60}
+              tick={<CustomizedAxisTick />}
             />
+            {/* <YAxis tickFormatter={formatYAxisTick} /> */}
+            <Tooltip content={<CustomTooltip />} />
+            <Bar dataKey="forecasted_shipments" fill="#82ca9d" />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -181,4 +209,3 @@ const CpfChart = () => {
 };
 
 export default CpfChart;
-
